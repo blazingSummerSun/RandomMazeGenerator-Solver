@@ -34,7 +34,7 @@ public class HuntAndKill implements Generator {
         int[] on = {1, 1};
 
         while (!complete(maze)) {
-            List<int[]> n = neighbors(maze, on[zeroCoord], on[oneCoord]);
+            List<int[]> n = neighbors(maze, on[zeroCoord], on[oneCoord], true);
             if (n.isEmpty()) {
                 int[][] t = findCoord(maze);
                 if (t != null && t[0] != null) {  // Add null checks
@@ -60,7 +60,7 @@ public class HuntAndKill implements Generator {
         return new Maze(oddHeight, oddWidth, maze);
     }
 
-    private static List<int[]> neighbors(Cell[][] maze, int ic, int jc) {
+    private static List<int[]> neighbors(Cell[][] maze, int ic, int jc, boolean checkWall) {
         int zeroIdx = 0;
         int oneIdx = 1;
         List<int[]> finalList = new ArrayList<>();
@@ -73,28 +73,9 @@ public class HuntAndKill implements Generator {
             // [i + 2][j]
             n[i % 2] += ((i / 2 * 2) != 0) ? i / 2 * 2 : STEP_BACK;
             if (n[zeroIdx] < maze.length && n[oneIdx] < maze[zeroIdx].length && n[zeroIdx] > 0 && n[oneIdx] > 0) {
-                if (maze[n[zeroIdx]][n[oneIdx]].type() == Cell.Type.WALL) {
+                if (checkWall || maze[n[zeroIdx]][n[oneIdx]].type() == Cell.Type.WALL) {
                     finalList.add(n);
                 }
-            }
-        }
-        return finalList;
-    }
-
-    private static List<int[]> neighborsAB(Cell[][] maze, int ic, int jc) {
-        int zeroIdx = 0;
-        int oneIdx = 1;
-        List<int[]> finalList = new ArrayList<>();
-        for (int i = 0; i < NEIGHBOURS; i++) {
-            int[] n = {ic, jc};
-            // Iterates through four neighbors
-            // [i][j - 2]
-            // [i][j + 2]
-            // [i - 2][j]
-            // [i + 2][j]
-            n[i % 2] += ((i / 2 * 2) != 0) ? i / 2 * 2 : STEP_BACK;
-            if (n[zeroIdx] < maze.length && n[oneIdx] < maze[zeroIdx].length && n[zeroIdx] > 0 && n[oneIdx] > 0) {
-                finalList.add(n);
             }
         }
         return finalList;
@@ -115,7 +96,7 @@ public class HuntAndKill implements Generator {
         for (int i = 1; i < maze.length; i += 2) {
             for (int j = 1; j < maze[i].length; j += 2) {
                 if (maze[i][j].type() == Cell.Type.WALL) {
-                    List<int[]> n = neighborsAB(maze, i, j);
+                    List<int[]> n = neighbors(maze, i, j, false);
                     for (int[] coord : n) {
                         int firstCoord = 1;
                         int secondCoord = 2;

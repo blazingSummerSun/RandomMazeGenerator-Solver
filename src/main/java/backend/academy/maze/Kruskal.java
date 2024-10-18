@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Kruskal implements Generator {
-    private final static int ZERO = 0;
-    private final static int ONE = 1;
+    private final SecureRandom random = new SecureRandom();
 
     @Override
     public Maze generate(int height, int width) {
+        int zeroIdx = 0;
+        int oneIdx = 1;
         // Make dimensions odd
         int oddWidth = width - width % 2;
         oddWidth++;
@@ -23,12 +24,12 @@ public class Kruskal implements Generator {
 
         for (int i = 0; i < oddHeight; i++) {
             for (int j = 0; j < oddWidth; j++) {
-                boolean add = !(i % 2 == 1 && j % 2 == 1);
+                boolean add = !(i % 2 != 0 && j % 2 != 0);
                 maze[i][j] = add ? new Cell(i, j, Cell.Type.WALL) : new Cell(i, j, Cell.Type.PASSAGE);
                 if (!add) {
-                    List<int[]> newSet = new ArrayList<>();
-                    newSet.add(new int[] {i, j});
-                    sets.add(newSet);
+                    List<int[]> newArrayList = new ArrayList<>();
+                    newArrayList.add(new int[] {i, j});
+                    sets.add(newArrayList);
                 }
 
                 if (i != oddHeight - 2 && !add) {
@@ -41,25 +42,23 @@ public class Kruskal implements Generator {
             }
         }
 
-        maze[0][1] = new Cell(0, 1, Cell.Type.PASSAGE);
-
-        SecureRandom random = new SecureRandom();
+        maze[zeroIdx][oneIdx] = new Cell(0, 1, Cell.Type.PASSAGE);
 
         while (!edges.isEmpty()) {
             int index = random.nextInt(edges.size());
             int[] removed = edges.remove(index);
 
-            int choice = removed[0] % 2;
+            int choice = removed[zeroIdx] % 2;
 
             int[] cell1;
             int[] cell2;
 
             if (choice == 1) {
-                cell1 = new int[] {removed[0], removed[1] - 1};
-                cell2 = new int[] {removed[0], removed[1] + 1};
+                cell1 = new int[] {removed[zeroIdx], removed[oneIdx] - 1};
+                cell2 = new int[] {removed[zeroIdx], removed[oneIdx] + 1};
             } else {
-                cell1 = new int[] {removed[0] - 1, removed[1]};
-                cell2 = new int[] {removed[0] + 1, removed[1]};
+                cell1 = new int[] {removed[zeroIdx] - 1, removed[oneIdx]};
+                cell2 = new int[] {removed[zeroIdx] + 1, removed[oneIdx]};
             }
 
             int i1 = indexOfSet(sets, cell1);
@@ -71,7 +70,8 @@ public class Kruskal implements Generator {
                     i1--;
                 }
                 sets.get(i1).addAll(add);
-                maze[removed[0]][removed[1]] = new Cell(removed[0], removed[1], Cell.Type.PASSAGE);
+                maze[removed[zeroIdx]][removed[oneIdx]] =
+                    new Cell(removed[zeroIdx], removed[oneIdx], Cell.Type.PASSAGE);
             }
         }
 
@@ -89,8 +89,10 @@ public class Kruskal implements Generator {
     }
 
     private static boolean contains(List<int[]> s, int[] c) {
+        int zeroIdx = 0;
+        int oneIdx = 1;
         for (int[] cell : s) {
-            if (cell[ZERO] == c[ZERO] && cell[ONE] == c[ONE]) {
+            if (cell[zeroIdx] == c[zeroIdx] && cell[oneIdx] == c[oneIdx]) {
                 return true;
             }
         }
