@@ -11,19 +11,13 @@ public class Kruskal implements Generator {
     public Maze generate(int height, int width) {
         int zeroIdx = 0;
         int oneIdx = 1;
-        // Make dimensions odd
-        int oddWidth = width - width % 2;
-        oddWidth++;
-        int oddHeight = height - height % 2;
-        oddHeight++;
 
-        // Initialize maze: each square is its own set
-        Cell[][] maze = new Cell[oddHeight][oddWidth];
+        Cell[][] maze = new Cell[height][width];
         List<List<int[]>> sets = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
 
-        for (int i = 0; i < oddHeight; i++) {
-            for (int j = 0; j < oddWidth; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 boolean add = !(i % 2 != 0 && j % 2 != 0);
                 maze[i][j] = add ? new Cell(i, j, Cell.Type.WALL) : new Cell(i, j, Cell.Type.PASSAGE);
                 if (!add) {
@@ -32,11 +26,11 @@ public class Kruskal implements Generator {
                     sets.add(newArrayList);
                 }
 
-                if (i != oddHeight - 2 && !add) {
+                if (i != height - 2 && !add) {
                     edges.add(new int[] {i + 1, j});
                 }
 
-                if (j != oddWidth - 2 && !add) {
+                if (j != width - 2 && !add) {
                     edges.add(new int[] {i, j + 1});
                 }
             }
@@ -75,8 +69,8 @@ public class Kruskal implements Generator {
             }
         }
 
-        maze[oddHeight - 1][oddWidth - 2] = new Cell(oddHeight - 1, oddWidth - 1, Cell.Type.PASSAGE);
-        return new Maze(oddHeight, oddWidth, maze);
+        maze[height - 1][width - 2] = new Cell(height - 1, width - 1, Cell.Type.PASSAGE);
+        return new Maze(height, width, maze);
     }
 
     private static int indexOfSet(List<List<int[]>> sets, int[] c) {
