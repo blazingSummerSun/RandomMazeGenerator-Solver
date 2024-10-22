@@ -8,8 +8,8 @@ import lombok.Getter;
     private final Cell[][] grid;
 
     public Maze(int height, int width, Cell[][] grid) {
-        this.height = height;
-        this.width = width;
+        this.width = (width - width % 2) + 1;
+        this.height = (height - height % 2) + 1;
         this.grid = grid;
     }
 
