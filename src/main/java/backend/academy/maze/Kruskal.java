@@ -100,10 +100,10 @@ public class Kruskal implements Generator {
         return -1;
     }
 
-    private static boolean contains(List<int[]> set, int[] coordinates) {
+    private static boolean contains(List<int[]> listOfCoordinates, int[] coordinates) {
         int zeroIdx = 0;
         int oneIdx = 1;
-        for (int[] cell : set) {
+        for (int[] cell : listOfCoordinates) {
             if (cell[zeroIdx] == coordinates[zeroIdx] && cell[oneIdx] == coordinates[oneIdx]) {
                 return true;
             }
