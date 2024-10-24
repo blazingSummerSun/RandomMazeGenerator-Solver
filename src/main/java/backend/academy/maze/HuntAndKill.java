@@ -11,21 +11,14 @@ public class HuntAndKill implements Generator {
 
     @Override
     public Maze generate(int height, int width) {
-        // Make dimensions odd
-        int oddWidth = width - width % 2;
-        oddWidth++;
-        int oddHeight = height - height % 2;
-        oddHeight++;
 
-        // Fill maze with 1's (walls)
-        Cell[][] maze = new Cell[oddHeight][oddWidth];
-        for (int i = 0; i < oddHeight; i++) {
-            for (int j = 0; j < oddWidth; j++) {
+        Cell[][] maze = new Cell[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 maze[i][j] = new Cell(i, j, Cell.Type.WALL);
             }
         }
 
-        // Opening at top - start of maze
         int zeroCoord = 0;
         int oneCoord = 1;
         maze[zeroCoord][oneCoord] = new Cell(0, 1, Cell.Type.PASSAGE);
@@ -37,7 +30,7 @@ public class HuntAndKill implements Generator {
             List<int[]> n = neighbors(maze, on[zeroCoord], on[oneCoord], true);
             if (n.isEmpty()) {
                 int[][] t = findCoord(maze);
-                if (t != null && t[0] != null) {  // Add null checks
+                if (t != null && t[0] != null) {
                     on = t[0];
 
                     maze[on[zeroCoord]][on[oneCoord]] = new Cell(on[zeroCoord], on[oneCoord], Cell.Type.PASSAGE);
@@ -56,8 +49,8 @@ public class HuntAndKill implements Generator {
             }
         }
 
-        maze[oddHeight - 2][oddWidth - 1] = new Cell(oddHeight - 2, oddWidth - 1, Cell.Type.PASSAGE);
-        return new Maze(oddHeight, oddWidth, maze);
+        maze[height - 2][width - 1] = new Cell(height - 2, width - 1, Cell.Type.PASSAGE);
+        return new Maze(height, width, maze);
     }
 
     private static List<int[]> neighbors(Cell[][] maze, int ic, int jc, boolean checkWall) {
