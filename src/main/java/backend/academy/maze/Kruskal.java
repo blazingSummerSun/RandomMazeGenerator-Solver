@@ -88,7 +88,11 @@ public class Kruskal implements Generator {
 
         // Add the exit from the maze at (height-1, width-2) coordinate
         maze[height - 1][width - 2] = new Cell(height - 1, width - 1, Cell.Type.PASSAGE);
-        return new Maze(height, width, maze);
+        EnvironmentGeneration generation = new EnvironmentGeneration(new Maze(height, width, maze));
+        generation.removeRandomWalls();
+        generation.randomGeneration();
+        generation.randomGeneration();
+        return generation.maze();
     }
 
     private static int indexOfSet(List<List<int[]>> sets, int[] coordinates) {
