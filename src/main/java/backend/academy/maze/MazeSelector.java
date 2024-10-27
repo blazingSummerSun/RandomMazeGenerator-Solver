@@ -15,8 +15,8 @@ public class MazeSelector {
     private static final int BFS = 2;
     private static final int A_STAR = 3;
     private static final String NOT_A_NUMBER_ERROR = "Your input is not a number! Try again!";
-    private final static String IO_ERROR = "Something wrong with your input! Try again!";
-    private final static String INPUT_HINT = "Enter any positive integer!";
+    private static final String IO_ERROR = "Something wrong with your input! Try again!";
+    private static final String INPUT_HINT = "Enter any positive integer!";
 
     private int generatorIndex = -1;
     private int solverIndex;

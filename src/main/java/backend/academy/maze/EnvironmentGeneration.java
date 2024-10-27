@@ -3,11 +3,12 @@ package backend.academy.maze;
 import java.security.SecureRandom;
 
 public record EnvironmentGeneration(Maze maze) {
-    private final static SecureRandom RANDOM = new SecureRandom();
-    private final static int ENVIRONMENT_TYPES = 2;
-    private final static int SWAMP_ID = 0;
-    private final static int LAKE_ID = 1;
-    private final static int FREQUENCY = 3;
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final int ENVIRONMENT_TYPES = 3;
+    private static final int SWAMP_ID = 0;
+    private static final int LAKE_ID = 1;
+    private static final int COIN_ID = 2;
+    private static final int FREQUENCY = 3;
 
     public void randomGeneration() {
         for (int i = 1; i < maze.height(); i++) {
@@ -19,10 +20,15 @@ public record EnvironmentGeneration(Maze maze) {
                         && maze.grid()[i][randomIndex].type() == Cell.Type.PASSAGE) {
                         maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.SWAMP);
                     }
-                } else {
+                } else if (type == LAKE_ID) {
                     if (randomIndex > 0 && randomIndex < maze.width() - 1
                         && maze.grid()[i][randomIndex].type() == Cell.Type.PASSAGE) {
                         maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.LAKE);
+                    }
+                } else {
+                    if (randomIndex > 0 && randomIndex < maze.width() - 1
+                        && maze.grid()[i][randomIndex].type() == Cell.Type.PASSAGE && randomIndex % 2 == 0) {
+                        maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.COIN);
                     }
                 }
             }

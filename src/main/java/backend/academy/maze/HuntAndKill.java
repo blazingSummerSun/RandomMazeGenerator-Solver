@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HuntAndKill implements Generator {
-    private final static SecureRandom RANDOM = new SecureRandom();
-    private final static int NEIGHBOURS = 4;
-    private final static int STEP_BACK = -2;
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final int NEIGHBOURS = 4;
+    private static final int STEP_BACK = -2;
 
     @Override
     public Maze generate(int height, int width) {
