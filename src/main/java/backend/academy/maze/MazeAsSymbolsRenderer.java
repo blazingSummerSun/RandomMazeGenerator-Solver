@@ -4,6 +4,11 @@ import java.io.PrintStream;
 import java.util.List;
 
 public class MazeAsSymbolsRenderer implements Renderer {
+    private final static int SWAMP = 5;
+    private final static int PASSAGE = 0;
+    private final static char ANSWER = '#';
+    private final static int WALL = 1;
+
     @Override
     public void render(Maze maze, List<Node> shortestPath, PrintStream output) {
         if (shortestPath.isEmpty()) {
@@ -20,11 +25,13 @@ public class MazeAsSymbolsRenderer implements Renderer {
             for (int i = 0; i < maze.height(); i++) {
                 for (int j = 0; j < maze.width(); j++) {
                     if (maze.grid()[i][j].type() == Cell.Type.PASSAGE) {
-                        output.print(0 + " ");
+                        output.print(PASSAGE + " ");
                     } else if (maze.grid()[i][j].type() == Cell.Type.WALL) {
-                        output.print(1 + " ");
-                    } else {
-                        output.print("# ");
+                        output.print(WALL + " ");
+                    } else if (maze.grid()[i][j].type() == Cell.Type.ANSWER) {
+                        output.print(ANSWER + " ");
+                    } else if (maze.grid()[i][j].type() == Cell.Type.SWAMP) {
+                        output.print(SWAMP + " ");
                     }
                 }
                 output.println();
@@ -40,9 +47,11 @@ public class MazeAsSymbolsRenderer implements Renderer {
         for (int i = 0; i < maze.height(); i++) {
             for (int j = 0; j < maze.width(); j++) {
                 if (maze.grid()[i][j].type() == Cell.Type.PASSAGE) {
-                    output.print(0 + " ");
-                } else {
-                    output.print(1 + " ");
+                    output.print(PASSAGE + " ");
+                } else if (maze.grid()[i][j].type() == Cell.Type.SWAMP) {
+                    output.print(SWAMP + " ");
+                } else if (maze.grid()[i][j].type() == Cell.Type.WALL) {
+                    output.print(WALL + " ");
                 }
             }
             output.println();
