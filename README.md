@@ -17,7 +17,7 @@ Choose the width for the maze
 Enter any positive integer!
 10
 ```
-**Important note:** since in these maze generation algorithms walls represented as a separate cells (not as strpis), maze's width and height are always odd for convenience traversing within a maze.
+**Important note:** since in these maze generation algorithms walls represented as a separate cells (not as strpis), maze's width and height are always odd for convenience traversing within a maze. \
 3. After that there will be generated maze in the console:
 ```
 🛏 is the start point
