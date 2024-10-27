@@ -50,7 +50,7 @@ public class HuntAndKill implements Generator {
         }
 
         maze[height - 2][width - 1] = new Cell(height - 2, width - 1, Cell.Type.PASSAGE);
-        return new Maze(height, width, maze);
+        return swampGeneration(new Maze(height, width, maze));
     }
 
     private static List<int[]> neighbors(Cell[][] maze, int ic, int jc, boolean checkWall) {
@@ -101,5 +101,16 @@ public class HuntAndKill implements Generator {
             }
         }
         return null;
+    }
+
+    private Maze swampGeneration(Maze maze) {
+        for (int i = 1; i < maze.height(); i++) {
+            int randomIndex = RANDOM.nextInt(maze.height());
+            if (randomIndex > 0 && randomIndex < maze.width() - 1
+                && maze.grid()[i][randomIndex].type() != Cell.Type.WALL) {
+                maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.SWAMP);
+            }
+        }
+        return maze;
     }
 }
