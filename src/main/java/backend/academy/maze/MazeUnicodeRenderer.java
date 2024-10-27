@@ -4,13 +4,14 @@ import java.io.PrintStream;
 import java.util.List;
 
 public class MazeUnicodeRenderer implements Renderer {
-    private final static String START = "🛏";
-    private final static String END = "📍";
-    private final static String SWAMP = "\uD83D\uDFE9";
-    private final static String PASSAGE = "\uD83D\uDFE7";
-    private final static String ANSWER = "🟪";
-    private final static String WALL = "\uD83D\uDFEB";
-    private final static String LAKE = "\uD83D\uDFE6";
+    private static final String START = "🛏";
+    private static final String END = "📍";
+    private static final String SWAMP = "🐸";
+    private static final String PASSAGE = "🟠";
+    private static final String ANSWER = "🟣";
+    private static final String WALL = "🧱";
+    private static final String LAKE = "🌊";
+    private static final String COIN = "💷";
 
     @Override
     public void render(Maze maze, List<Node> shortestPath, PrintStream output) {
@@ -39,6 +40,8 @@ public class MazeUnicodeRenderer implements Renderer {
                         output.print(SWAMP + " ");
                     } else if (maze.grid()[i][j].type() == Cell.Type.LAKE) {
                         output.print(LAKE + " ");
+                    } else if (maze.grid()[i][j].type() == Cell.Type.COIN) {
+                        output.print(COIN + " ");
                     }
                 }
                 output.println();
@@ -59,6 +62,8 @@ public class MazeUnicodeRenderer implements Renderer {
                     output.print(WALL + " ");
                 } else if (maze.grid()[i][j].type() == Cell.Type.LAKE) {
                     output.print(LAKE + " ");
+                } else if (maze.grid()[i][j].type() == Cell.Type.COIN) {
+                    output.print(COIN + " ");
                 }
             }
             output.println();
@@ -75,5 +80,6 @@ public class MazeUnicodeRenderer implements Renderer {
         output.println(ANSWER + " is the cheapest (not the case for BFS) path");
         output.println(WALL + " is a wall");
         output.println(LAKE + " is a lake");
+        output.println(COIN + " is a coin");
     }
 }
