@@ -1,8 +1,10 @@
 package backend.academy;
 
 import backend.academy.maze.Maze;
-import backend.academy.maze.MazeAsSymbolsRenderer;
 import backend.academy.maze.MazeSelector;
+import backend.academy.maze.MazeUnicodeRenderer;
+import backend.academy.maze.Node;
+import java.util.List;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -12,10 +14,11 @@ public class Main {
         mazeSelector.algorithmSelection();
         mazeSelector.sizeSelection();
         Maze maze = mazeSelector.mazeGeneration();
-        MazeAsSymbolsRenderer renderer = new MazeAsSymbolsRenderer();
+        MazeUnicodeRenderer renderer = new MazeUnicodeRenderer();
         renderer.render(maze, System.out);
         mazeSelector.getPathCoordinates();
         mazeSelector.getMazeSolver();
-        renderer.render(maze, mazeSelector.applySolver(), System.out);
+        List<Node> answer = mazeSelector.applySolver();
+        renderer.render(maze, answer, System.out);
     }
 }
