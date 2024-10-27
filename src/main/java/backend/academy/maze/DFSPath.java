@@ -7,8 +7,6 @@ public class DFSPath implements Solver {
     private static final int[][] DIRECTIONS = {
         {1, 0}, {-1, 0}, {0, 1}, {0, -1}
     };
-    private static final int SWAMP = 5;
-    private static final int PASSAGE = 1;
     private final Maze maze;
     private final Coordinate start;
     private final Coordinate end;
@@ -30,7 +28,7 @@ public class DFSPath implements Solver {
 
     public List<Node> findShortestPath() {
         boolean[][] visited = new boolean[maze.height()][maze.width()];
-        findPath(start, end, visited, cellCost(maze.grid()[start.row()][start.col()]), new ArrayList<>());
+        findPath(start, end, visited, maze.grid()[start.row()][start.col()].cellCost(), new ArrayList<>());
         return new ArrayList<>(shortestPath);
     }
 
@@ -62,21 +60,12 @@ public class DFSPath implements Solver {
                 int nextYStep = start.col() + direction[yStep];
                 if (nextXStep >= 0 && nextXStep < maze.height() && nextYStep >= 0 && nextYStep < maze.width()) {
                     Coordinate next = new Coordinate(nextXStep, nextYStep);
-                    findPath(next, end, visited, length + cellCost(maze.grid()[nextXStep][nextYStep]), currentPath);
+                    findPath(next, end, visited, length + maze.grid()[nextXStep][nextYStep].cellCost(), currentPath);
                 }
             }
         }
 
         currentPath.removeLast(); // Backtrack
         visited[start.row()][start.col()] = false; // Unmark this cell
-    }
-
-    private int cellCost(Cell cell) {
-        if (maze.grid()[cell.row()][cell.col()].type() == Cell.Type.SWAMP) {
-            return SWAMP;
-        } else if (maze.grid()[cell.row()][cell.col()].type() == Cell.Type.PASSAGE) {
-            return PASSAGE;
-        }
-        return PASSAGE;
     }
 }
