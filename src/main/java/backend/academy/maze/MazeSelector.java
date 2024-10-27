@@ -38,8 +38,8 @@ public class MazeSelector {
         while (generatorIndex < KRUSKAL || generatorIndex > HUNT_AND_KILL) {
             output.print("""
                 Choose desired algorithm for maze generation (enter the number)!
-                1. Kruskal's algorithm generation (Kinda simple maze without loops inside)
-                2. Hunt and Kill algorithm generation (More complicated maze with loops inside)
+                1. Kruskal's algorithm generation
+                2. Hunt and Kill algorithm generation
                 """);
             try {
                 generatorIndex = Integer.parseInt(reader.readLine());
