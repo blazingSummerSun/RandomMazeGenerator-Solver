@@ -46,10 +46,9 @@ public class HuntAndKill implements Generator {
                     // Marks the midpoint as a passage.
                     maze[avgZero][avgOne] = new Cell(avgZero, avgOne, Cell.Type.PASSAGE);
                 }
-            }
-            // If there are unvisited neighbors,
-            // it chooses one randomly and connects it to the current cell, marking both as passages.
-            else {
+            } else {
+                // If there are unvisited neighbors,
+                // it chooses one randomly and connects it to the current cell, marking both as passages.
                 int i = RANDOM.nextInt(currentNeighbors.size());
                 // Pick random neighbor and mark it as a passage.
                 int[] randomNeighbor = currentNeighbors.get(i);
