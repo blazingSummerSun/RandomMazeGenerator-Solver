@@ -11,7 +11,7 @@ public class HuntAndKill implements Generator {
 
     @Override
     public Maze generate(int height, int width) {
-
+        // Fill the whole grid with walls
         Cell[][] maze = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -21,47 +21,66 @@ public class HuntAndKill implements Generator {
 
         int zeroCoord = 0;
         int oneCoord = 1;
+        // (0, 1) and (1, 1) are entry coordinates
         maze[zeroCoord][oneCoord] = new Cell(0, 1, Cell.Type.PASSAGE);
         maze[oneCoord][oneCoord] = new Cell(1, 1, Cell.Type.PASSAGE);
-
-        int[] on = {1, 1};
+        int[] currentCell = {1, 1};
 
         while (!complete(maze)) {
-            List<int[]> n = neighbors(maze, on[zeroCoord], on[oneCoord], true);
-            if (n.isEmpty()) {
-                int[][] t = findCoord(maze);
-                if (t != null && t[0] != null) {
-                    on = t[0];
+            // Collecting all unvisited neighbors of the current cell
+            List<int[]> currentNeighbors = neighbors(maze, currentCell[zeroCoord], currentCell[oneCoord], true);
+            // If there are no unvisited neighbors,
+            // it hunts for the next starting point by finding a cell with unvisited neighbors
+            // and marks it as the new starting point.
+            if (currentNeighbors.isEmpty()) {
+                int[][] temp = findCoord(maze);
+                if (temp != null && temp[0] != null) {
+                    currentCell = temp[0];
 
-                    maze[on[zeroCoord]][on[oneCoord]] = new Cell(on[zeroCoord], on[oneCoord], Cell.Type.PASSAGE);
-                    int avgZero = on[zeroCoord] + (t[oneCoord][zeroCoord] - on[zeroCoord]) / 2;
-                    int avgOne = on[oneCoord] + (t[oneCoord][oneCoord] - on[oneCoord]) / 2;
+                    // Mark current cell as a passage
+                    maze[currentCell[zeroCoord]][currentCell[oneCoord]] = new Cell(
+                        currentCell[zeroCoord], currentCell[oneCoord], Cell.Type.PASSAGE);
+                    // Calculate the midpoint (avgZero, avgOne) between currentCell and its new neighbor (temp[1]).
+                    int avgZero = currentCell[zeroCoord] + (temp[oneCoord][zeroCoord] - currentCell[zeroCoord]) / 2;
+                    int avgOne = currentCell[oneCoord] + (temp[oneCoord][oneCoord] - currentCell[oneCoord]) / 2;
+                    // Marks the midpoint as a passage.
                     maze[avgZero][avgOne] = new Cell(avgZero, avgOne, Cell.Type.PASSAGE);
                 }
-            } else {
-                int i = RANDOM.nextInt(n.size());
-                int[] nb = n.get(i);
-                maze[nb[zeroCoord]][nb[oneCoord]] = new Cell(nb[zeroCoord], nb[oneCoord], Cell.Type.PASSAGE);
-                int avgZero = nb[zeroCoord] + (on[zeroCoord] - nb[zeroCoord]) / 2;
-                int avgOne = nb[oneCoord] + (on[oneCoord] - nb[oneCoord]) / 2;
+            }
+            // If there are unvisited neighbors,
+            // it chooses one randomly and connects it to the current cell, marking both as passages.
+            else {
+                int i = RANDOM.nextInt(currentNeighbors.size());
+                // Pick random neighbor and mark it as a passage.
+                int[] randomNeighbor = currentNeighbors.get(i);
+                maze[randomNeighbor[zeroCoord]][randomNeighbor[oneCoord]] = new Cell(
+                    randomNeighbor[zeroCoord], randomNeighbor[oneCoord], Cell.Type.PASSAGE);
+
+                // Calculate the midpoint (avgZero, avgOne) between currentCell and its new neighbor (temp[1]).
+                int avgZero = randomNeighbor[zeroCoord] + (currentCell[zeroCoord] - randomNeighbor[zeroCoord]) / 2;
+                int avgOne = randomNeighbor[oneCoord] + (currentCell[oneCoord] - randomNeighbor[oneCoord]) / 2;
+                // Marks the midpoint as a passage.
                 maze[avgZero][avgOne] = new Cell(avgZero, avgOne, Cell.Type.PASSAGE);
-                on = nb.clone();
+                // Go to the random neighbor
+                currentCell = randomNeighbor.clone();
             }
         }
 
+        // (height - 2, width - 1) is the exit from the maze
         maze[height - 2][width - 1] = new Cell(height - 2, width - 1, Cell.Type.PASSAGE);
         EnvironmentGeneration generation = new EnvironmentGeneration(new Maze(height, width, maze));
+        // Generation additional environment
         generation.randomGeneration();
         generation.randomGeneration();
         return generation.maze();
     }
 
-    private static List<int[]> neighbors(Cell[][] maze, int ic, int jc, boolean checkWall) {
+    private static List<int[]> neighbors(Cell[][] maze, int iCell, int jCell, boolean checkWall) {
         int zeroIdx = 0;
         int oneIdx = 1;
         List<int[]> finalList = new ArrayList<>();
         for (int i = 0; i < NEIGHBOURS; i++) {
-            int[] n = {ic, jc};
+            int[] n = {iCell, jCell};
             // Iterates through four neighbors
             // [i][j - 2]
             // [i][j + 2]
@@ -78,6 +97,7 @@ public class HuntAndKill implements Generator {
     }
 
     private static boolean complete(Cell[][] maze) {
+        // Iterating through the maze and checking if all cells are marked as visited
         for (int i = 1; i < maze.length; i += 2) {
             for (int j = 1; j < maze[i].length; j += 2) {
                 if (maze[i][j].type() != Cell.Type.PASSAGE) {
@@ -89,6 +109,7 @@ public class HuntAndKill implements Generator {
     }
 
     private static int[][] findCoord(Cell[][] maze) {
+        // Searching for a cell in the maze that is a wall and has at least one neighboring cell that is a passage.
         for (int i = 1; i < maze.length; i += 2) {
             for (int j = 1; j < maze[i].length; j += 2) {
                 if (maze[i][j].type() == Cell.Type.WALL) {
