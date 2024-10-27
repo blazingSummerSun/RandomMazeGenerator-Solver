@@ -8,8 +8,6 @@ public class AStarPath implements Solver {
     private static final int[][] DIRECTIONS = {
         {1, 0}, {-1, 0}, {0, 1}, {0, -1}
     };
-    private static final int SWAMP = 5;
-    private static final int PASSAGE = 1;
     private final Maze maze;
     private final Coordinate start;
     private final Coordinate end;
@@ -49,7 +47,7 @@ public class AStarPath implements Solver {
                 Node neighborNode;
                 if (isValid(newX, newY)) {
                     neighborNode = new Node(newX, newY,
-                        current.g + cellCost(maze.grid()[newX][newY]), heuristic(newX, newY), current);
+                        current.g + maze.grid()[newX][newY].cellCost(), heuristic(newX, newY), current);
                     destinations[newX][newY] = neighborNode;
                     priorityTraverse.add(neighborNode);
                 }
@@ -65,14 +63,5 @@ public class AStarPath implements Solver {
 
     private int heuristic(int x, int y) {
         return Math.abs(x - end.row()) + Math.abs(y - end.col());
-    }
-
-    private int cellCost(Cell cell) {
-        if (maze.grid()[cell.row()][cell.col()].type() == Cell.Type.SWAMP) {
-            return SWAMP;
-        } else if (maze.grid()[cell.row()][cell.col()].type() == Cell.Type.PASSAGE) {
-            return PASSAGE;
-        }
-        return PASSAGE;
     }
 }
