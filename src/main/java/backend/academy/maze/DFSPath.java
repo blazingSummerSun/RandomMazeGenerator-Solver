@@ -65,7 +65,9 @@ public class DFSPath implements Solver {
             }
         }
 
-        currentPath.removeLast(); // Backtrack
-        visited[start.row()][start.col()] = false; // Unmark this cell
+        // Backtracking
+        currentPath.removeLast();
+        // Mark current cell as unvisited
+        visited[start.row()][start.col()] = false;
     }
 }
