@@ -5,8 +5,8 @@
 ```
 Welcome to the maze!
 Choose desired algorithm for maze generation (enter the number)!
-1. Kruskal's algorithm generation (Kinda simple maze without loops inside)
-2. Hunt and Kill algorithm generation (More complicated maze with loops inside)
+1. Kruskal's algorithm generation
+2. Hunt and Kill algorithm generation
 ```
 2. Enter *height* and *width*
 ```
