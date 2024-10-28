@@ -17,7 +17,7 @@ Choose the width for the maze
 Enter any positive integer!
 10
 ```
-**Important note:** since in these maze generation algorithms walls represented as a separate cells (not as strpis), maze's width and height are always odd for convenience traversing within a maze. \
+**Important note:** since in these maze generation algorithms walls represented as a separate cells (not as strips), maze's width and height are always odd for convenience traversing within a maze. \
 3. After that there will be generated maze in the console:
 ```
 🛏 is the start point
@@ -40,7 +40,7 @@ Enter any positive integer!
 🧱 🐸 🌊 🟠 💷 🟠 🟠 🐸 🐸 🟠 🟠 
 🧱 🧱 🧱 🧱 🧱 🧱 🧱 🧱 🧱 🧱 🧱 
 ```
-**Important note:** different type of cell are costs differently:
+**Important note:** different types of cells are costs differently:
 
 🐸 (swamp) costs 5 point \
 🟠 (passage) costs 1 point\
@@ -68,7 +68,7 @@ Enter the y-coordinate! (starting from 0-index)!
 Note that y-coordinate is a row number counting from the left top corner!
 8
 ```
-**Important note:** user should enter coordinates using 0-indexing starting from left top corner
+**Important note:** user should enter coordinates using 0-indexing starting from left top corner \
 6. Pick solving algorithm
 ```
 Choose the method you want to apply to find the shortest path from (0, 1) to (7, 8) 
@@ -76,7 +76,7 @@ Choose the method you want to apply to find the shortest path from (0, 1) to (7,
 2. BFS
 3. A* algorithm
 ```
-6. After that, algorithm either find the shortest path or write *Such a path doesn't exist!*
+6. After that, algorithm either will find the shortest path or will write *Such a path doesn't exist!*
 ```
 Here is your maze!
 🛏 is the start point
@@ -105,7 +105,7 @@ Here is your maze!
 
 ### Kruskal's algorithm
 One of the algorithm generating a random maze is Kruskal's algorithm:
-Kruskal's algorithm produces minimum spanning tree (no loops inside maze).
+it produces minimum spanning tree (no loops inside maze), but in these implementation there could be loops inside.
 
 **Key steps:**
 1. Iterating through all possible cells creating passages on odd coordinates with corresponding cells sets and edges.
@@ -152,20 +152,21 @@ while (!edges.isEmpty()) {
 ```java
 List<int[]> currentNeighbors = neighbors(maze, currentCell[zeroCoord], currentCell[oneCoord], true);
 ```
-3. Enter “hunt” mode, where you scan the grid looking for an unvisited cell that is adjacent to a visited cell. If found, carve a passage between the two and let the formerly unvisited cell be the new starting location.
+3. Enter “hunt” mode, where algorithm scan the grid looking for an unvisited cell that is adjacent to a visited cell. If found, carve a passage between the two and let the formerly unvisited cell be the new starting location.
 ```java
 int[][] temp = findCoord(maze);
-if (temp != null && temp[0] != null) {
-currentCell = temp[0];
+    if (temp != null && temp[0] != null) {
+    currentCell = temp[0];
 
-// Mark current cell as a passage
-maze[currentCell[zeroCoord]][currentCell[oneCoord]] = new Cell(
-    currentCell[zeroCoord], currentCell[oneCoord], Cell.Type.PASSAGE);
-// Calculate the midpoint (avgZero, avgOne) between currentCell and its new neighbor (temp[1]).
-int avgZero = currentCell[zeroCoord] + (temp[oneCoord][zeroCoord] - currentCell[zeroCoord]) / 2;
-int avgOne = currentCell[oneCoord] + (temp[oneCoord][oneCoord] - currentCell[oneCoord]) / 2;
-// Marks the midpoint as a passage.
-maze[avgZero][avgOne] = new Cell(avgZero, avgOne, Cell.Type.PASSAGE);
+    // Mark current cell as a passage
+    maze[currentCell[zeroCoord]][currentCell[oneCoord]] = new Cell(
+        currentCell[zeroCoord], currentCell[oneCoord], Cell.Type.PASSAGE);
+    // Calculate the midpoint (avgZero, avgOne) between currentCell and its new neighbor (temp[1]).
+    int avgZero = currentCell[zeroCoord] + (temp[oneCoord][zeroCoord] - currentCell[zeroCoord]) / 2;
+    int avgOne = currentCell[oneCoord] + (temp[oneCoord][oneCoord] - currentCell[oneCoord]) / 2;
+   // Marks the midpoint as a passage.
+    maze[avgZero][avgOne] = new Cell(avgZero, avgOne, Cell.Type.PASSAGE);
+}
 ```
 4. Repeat steps 2 and 3 until the hunt mode scans the entire grid and finds no unvisited cells.
 5. Generate random specific cells: lakes, swamps, coins.
@@ -176,3 +177,52 @@ maze[avgZero][avgOne] = new Cell(avgZero, avgOne, Cell.Type.PASSAGE);
 ## Shortest path searching algorithm
 ### A* algorithm
 A* algorithm uses heuristic to pick the optimal cell on each iteration calculating the traveled and left distance. Priority queue was used to achieve the optimal cell picking on each iteration.
+```
+while(!priorityTraverse.isEmpty()) {
+    current = priorityTraverse.poll();
+    // Traverse through the neighbors
+    for (int[] nextStep : DIRECTIONS) {
+        int newX = current.x + nextStep[xStep];
+        int newY = current.y + nextStep[yStep];
+        Node neighborNode;
+        if (isValid(newX, newY)) {
+            neighborNode = new Node(newX, newY,
+                current.g + maze.grid()[newX][newY].cellCost(), heuristic(newX, newY), current);
+            destinations[newX][newY] = neighborNode;
+            priorityTraverse.add(neighborNode);
+        }
+    }
+}
+// Heuristic calculation
+private int heuristic(int x, int y) {
+    return Math.abs(x - end.row()) + Math.abs(y - end.col());
+}
+```
+### Depth-first Search
+DFS uses recursion and backtracking to traverse through the whole maze. \
+Since usual DFS doesn't work on weighted graphs, here is implemented its "modernization" for finding the shortest path: brute force approach but using DFS concept:
+```java
+// If the algorithm found some path, it continue execution
+if (start.row() == end.row() && start.col() == end.col()) {
+    if (length < currentLength) {
+        shortestPath = new ArrayList<>(currentPath);
+        currentLength = length;
+    }
+}
+currentPath.removeLast();
+visited[start.row()][start.col()] = false;
+```
+Thus, such an approach has poor performance on big mazes (e.g. 20x20 size), but it always finds the optimal solution.
+
+### BFS
+BFS uses alternate visiting of neighbors of the cell that was pulled from the queue.
+BFS also doesn't work on weighted graphs, so here's default BFS implementation which finds the shortest path by amount of steps, not by it cost.
+```java
+while (!queueTraverse.isEmpty()) {
+    Node current = queueTraverse.poll();
+    ...
+    Node neighborNode = new Node(newX, newY, 0, 0, current);
+    queueTraverse.add(neighborNode);
+}
+```
+
