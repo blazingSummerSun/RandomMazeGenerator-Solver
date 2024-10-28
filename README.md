@@ -45,7 +45,7 @@ Enter any positive integer!
 ```
 **Important note:** different types of cells are costs differently:
 
-🐸 (swamp) costs 5 point \
+🐸 (swamp) costs 5 points \
 🟠 (passage) costs 1 point\
 🌊 (lake) costs 4 points \
 💷 (coin) costs 0 point (free) \
