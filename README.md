@@ -1,4 +1,7 @@
 # Documentation for the Maze Generation project.
+The program generates a random maze by predefined settings, and searches for the shortest/cheapest path inside.
+## How to install the program
+To check the program's functionality, you can copy the project on your machine and open it, for example, in the Intellij IDEA, and run it from Main.java
 ## How to use the program
 ### Initialization
 1. When the program starts, a user should enter either *1* or *2* to choose either *Kruskal's* or *Hunt and Kill* algorithms respectively.
@@ -225,4 +228,6 @@ while (!queueTraverse.isEmpty()) {
     queueTraverse.add(neighborNode);
 }
 ```
-
+## Contacts
+For any questions: \
+Email: beautifulfluffyclouds@gmail.com
