@@ -1,11 +1,10 @@
 package backend.academy.maze;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.PriorityQueue;
 
-public class BFSPath implements Solver {
+public class DijkstraPath implements Solver {
     private static final int[][] DIRECTIONS = {
         {1, 0}, {-1, 0}, {0, 1}, {0, -1}
     };
@@ -15,7 +14,7 @@ public class BFSPath implements Solver {
     private final Node[][] destinations;
     List<Node> shortestPath;
 
-    public BFSPath(Maze maze, Coordinate start, Coordinate end) {
+    public DijkstraPath(Maze maze, Coordinate start, Coordinate end) {
         this.maze = maze;
         this.start = start;
         this.end = end;
@@ -27,10 +26,10 @@ public class BFSPath implements Solver {
     public List<Node> solve() {
         int xCoordinate = 0;
         int yCoordinate = 1;
-        Queue<Node> queueTraverse = new LinkedList<>();
-        queueTraverse.add(new Node(start.row(), start.col(), 0, 0, null));
-        while (!queueTraverse.isEmpty()) {
-            Node current = queueTraverse.poll();
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>();
+        priorityQueue.add(new Node(start.row(), start.col(), 0, 0, null));
+        while (!priorityQueue.isEmpty()) {
+            Node current = priorityQueue.poll();
             if (current.x == end.row() && current.y == end.col()) {
                 while (current != null) {
                     shortestPath.add(current);
@@ -42,9 +41,10 @@ public class BFSPath implements Solver {
                 int newX = current.x + nextMove[xCoordinate];
                 int newY = current.y + nextMove[yCoordinate];
                 if (isValid(newX, newY)) {
-                    Node neighborNode = new Node(newX, newY, 0, 0, current);
+                    int newCost = current.g + maze.grid()[newX][newY].cellCost();
+                    Node neighborNode = new Node(newX, newY, newCost, 0, current);
                     destinations[newX][newY] = neighborNode;
-                    queueTraverse.add(neighborNode);
+                    priorityQueue.add(neighborNode);
                 }
             }
         }
@@ -55,5 +55,4 @@ public class BFSPath implements Solver {
         return x >= 0 && x < maze.height() && y >= 0 && y < maze.width()
             && maze.grid()[x][y].type() != Cell.Type.WALL && destinations[x][y] == null;
     }
-
 }
