@@ -39,7 +39,7 @@ public class AStarPath implements Solver {
                     shortestPath.add(current);
                     current = current.parent;
                 }
-                return shortestPath;
+                return shortestPath.reversed();
             }
             for (int[] nextStep : DIRECTIONS) {
                 int newX = current.x + nextStep[xStep];
