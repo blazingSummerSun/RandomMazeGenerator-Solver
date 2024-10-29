@@ -26,10 +26,6 @@ public class DFSPath implements Solver {
 
     @Override
     public List<Node> solve() {
-        return findShortestPath();
-    }
-
-    public List<Node> findShortestPath() {
         findPath(start, end, 0, new ArrayList<>());
         return new ArrayList<>(shortestPath);
     }
