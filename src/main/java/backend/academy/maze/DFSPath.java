@@ -11,14 +11,17 @@ public class DFSPath implements Solver {
     private final Coordinate start;
     private final Coordinate end;
     private List<Node> shortestPath;
-    private int currentLength;
+    private int shortestLength;
+    private final Node[][] pathToEachCell;
 
     public DFSPath(Maze maze, Coordinate start, Coordinate end) {
         this.maze = maze;
         this.start = start;
         this.end = end;
         this.shortestPath = new ArrayList<>();
-        this.currentLength = Integer.MAX_VALUE;
+        this.shortestLength = Integer.MAX_VALUE;
+        pathToEachCell = new Node[maze.height()][maze.width()];
+        pathToEachCell[start.row()][start.col()] = new Node(start.row(), start.col(), 0, 0, null);
     }
 
     @Override
@@ -27,30 +30,26 @@ public class DFSPath implements Solver {
     }
 
     public List<Node> findShortestPath() {
-        boolean[][] visited = new boolean[maze.height()][maze.width()];
-        findPath(start, end, visited, maze.grid()[start.row()][start.col()].cellCost(), new ArrayList<>());
+        findPath(start, end, 0, new ArrayList<>());
         return new ArrayList<>(shortestPath);
     }
 
     private void findPath(
         Coordinate start,
         Coordinate end,
-        boolean[][] visited,
         int length,
         List<Node> currentPath
     ) {
-        if (start.row() < 0 || start.col() < 0 || start.row() >= maze.height() || start.col() >= maze.width()
-            || maze.grid()[start.row()][start.col()].type() == Cell.Type.WALL || visited[start.row()][start.col()]) {
+        if (!isValid(start.row(), start.col())) {
             return;
         }
 
         currentPath.add(new Node(start.row(), start.col(), length, 0, null));
-        visited[start.row()][start.col()] = true;
 
         if (start.row() == end.row() && start.col() == end.col()) {
-            if (length < currentLength) {
-                shortestPath = new ArrayList<>(currentPath);
-                currentLength = length;
+            if (length < shortestLength) {
+                shortestPath = new ArrayList<>(currentPath).reversed();
+                shortestLength = length;
             }
         } else {
             int xStep = 0;
@@ -58,16 +57,33 @@ public class DFSPath implements Solver {
             for (int[] direction : DIRECTIONS) {
                 int nextXStep = start.row() + direction[xStep];
                 int nextYStep = start.col() + direction[yStep];
-                if (nextXStep >= 0 && nextXStep < maze.height() && nextYStep >= 0 && nextYStep < maze.width()) {
+                if (isValid(nextXStep, nextYStep) && pathToEachCell[nextXStep][nextYStep] == null) {
+                    addNeighbor(start.row(), start.col(), nextXStep, nextYStep);
                     Coordinate next = new Coordinate(nextXStep, nextYStep);
-                    findPath(next, end, visited, length + maze.grid()[nextXStep][nextYStep].cellCost(), currentPath);
+                    findPath(next, end, length + maze.grid()[nextXStep][nextYStep].cellCost(), currentPath);
+                } else if (isValid(nextXStep, nextYStep) && pathToEachCell[nextXStep][nextYStep] != null
+                    && pathToEachCell[nextXStep][nextYStep].g > length + maze.grid()[nextXStep][nextYStep].cellCost()) {
+                    addNeighbor(start.row(), start.col(), nextXStep, nextYStep);
+                    Coordinate next = new Coordinate(nextXStep, nextYStep);
+                    findPath(next, end, length + maze.grid()[nextXStep][nextYStep].cellCost(), currentPath);
                 }
             }
         }
-
-        // Backtracking
         currentPath.removeLast();
-        // Mark current cell as unvisited
-        visited[start.row()][start.col()] = false;
+    }
+
+    private boolean isValid(int x, int y) {
+        return x >= 0 && x < maze.height() && y >= 0 && y < maze.width() && !isWall(x, y);
+    }
+
+    private void addNeighbor(int startX, int startY, int newX, int newY) {
+        Node currentNode = pathToEachCell[startX][startY];
+        Node neighbor = new Node(newX, newY, currentNode.g + maze.grid()[newX][newY].cellCost(),
+            0, currentNode);
+        pathToEachCell[newX][newY] = neighbor;
+    }
+
+    private boolean isWall(int x, int y) {
+        return maze.grid()[x][y].type() == Cell.Type.WALL;
     }
 }
