@@ -27,21 +27,30 @@ public class MazeUnicodeRenderer implements Renderer {
             for (int i = 0; i < maze.height(); i++) {
                 for (int j = 0; j < maze.width(); j++) {
                     if (i == shortestPath.getLast().x && j == shortestPath.getLast().y) {
-                        output.print(START + " ");
-                    } else if (i == shortestPath.getFirst().x && j == shortestPath.getFirst().y) {
                         output.print(END + " ");
-                    } else if (maze.grid()[i][j].type() == Cell.Type.PASSAGE) {
-                        output.print(PASSAGE + " ");
-                    } else if (maze.grid()[i][j].type() == Cell.Type.WALL) {
-                        output.print(WALL + " ");
-                    } else if (maze.grid()[i][j].type() == Cell.Type.ANSWER) {
-                        output.print(ANSWER + " ");
-                    } else if (maze.grid()[i][j].type() == Cell.Type.SWAMP) {
-                        output.print(SWAMP + " ");
-                    } else if (maze.grid()[i][j].type() == Cell.Type.LAKE) {
-                        output.print(LAKE + " ");
-                    } else if (maze.grid()[i][j].type() == Cell.Type.COIN) {
-                        output.print(COIN + " ");
+                        continue;
+                    } else if (i == shortestPath.getFirst().x && j == shortestPath.getFirst().y) {
+                        output.print(START + " ");
+                        continue;
+                    }
+                    switch (maze.grid()[i][j].type()) {
+                        case SWAMP:
+                            output.print(SWAMP + " ");
+                            break;
+                        case WALL:
+                            output.print(WALL + " ");
+                            break;
+                        case ANSWER:
+                            output.print(ANSWER + " ");
+                            break;
+                        case LAKE:
+                            output.print(LAKE + " ");
+                            break;
+                        case COIN:
+                            output.print(COIN + " ");
+                            break;
+                        default:
+                            output.print(PASSAGE + " ");
                     }
                 }
                 output.println();
