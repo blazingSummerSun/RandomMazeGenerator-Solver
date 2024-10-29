@@ -54,16 +54,21 @@ public class MazeUnicodeRenderer implements Renderer {
         getInformation(output);
         for (int i = 0; i < maze.height(); i++) {
             for (int j = 0; j < maze.width(); j++) {
-                if (maze.grid()[i][j].type() == Cell.Type.PASSAGE) {
-                    output.print(PASSAGE + " ");
-                } else if (maze.grid()[i][j].type() == Cell.Type.SWAMP) {
-                    output.print(SWAMP + " ");
-                } else if (maze.grid()[i][j].type() == Cell.Type.WALL) {
-                    output.print(WALL + " ");
-                } else if (maze.grid()[i][j].type() == Cell.Type.LAKE) {
-                    output.print(LAKE + " ");
-                } else if (maze.grid()[i][j].type() == Cell.Type.COIN) {
-                    output.print(COIN + " ");
+                switch (maze.grid()[i][j].type()) {
+                    case COIN:
+                        output.print(COIN + " ");
+                        break;
+                    case SWAMP:
+                        output.print(SWAMP + " ");
+                        break;
+                    case WALL:
+                        output.print(WALL + " ");
+                        break;
+                    case LAKE:
+                        output.print(LAKE + " ");
+                        break;
+                    default:
+                        output.print(PASSAGE + " ");
                 }
             }
             output.println();
@@ -75,11 +80,11 @@ public class MazeUnicodeRenderer implements Renderer {
         output.println("Here is your maze!");
         output.println(START + " is the start point");
         output.println(END + " is the end point");
-        output.println(SWAMP + " is a swamp");
-        output.println(PASSAGE + " is a passage");
-        output.println(ANSWER + " is the cheapest (not the case for BFS) path");
+        output.println(SWAMP + " is a swamp (cost: 5000)");
+        output.println(PASSAGE + " is a passage (cost: 50)");
+        output.println(ANSWER + " is the cheapest path");
         output.println(WALL + " is a wall");
-        output.println(LAKE + " is a lake");
-        output.println(COIN + " is a coin");
+        output.println(LAKE + " is a lake (cost: 1000)");
+        output.println(COIN + " is a coin (cost: 0)");
     }
 }
