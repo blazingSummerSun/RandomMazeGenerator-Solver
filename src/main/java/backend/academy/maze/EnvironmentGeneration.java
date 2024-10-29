@@ -15,21 +15,22 @@ public record EnvironmentGeneration(Maze maze) {
             for (int j = 0; j < maze.width() / FREQUENCY; j++) {
                 int type = RANDOM.nextInt(ENVIRONMENT_TYPES);
                 int randomIndex = RANDOM.nextInt(maze.width());
-                if (type == SWAMP_ID) {
-                    if (randomIndex > 0 && randomIndex < maze.width() - 1
-                        && maze.grid()[i][randomIndex].type() == Cell.Type.PASSAGE) {
-                        maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.SWAMP);
-                    }
-                } else if (type == LAKE_ID) {
-                    if (randomIndex > 0 && randomIndex < maze.width() - 1
-                        && maze.grid()[i][randomIndex].type() == Cell.Type.PASSAGE) {
-                        maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.LAKE);
-                    }
-                } else {
-                    if (randomIndex > 0 && randomIndex < maze.width() - 1
-                        && maze.grid()[i][randomIndex].type() == Cell.Type.PASSAGE && randomIndex % 2 == 0) {
-                        maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.COIN);
-                    }
+                switch (type) {
+                    case SWAMP_ID:
+                        if (isValid(i, randomIndex)) {
+                            maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.SWAMP);
+                        }
+                        break;
+                    case LAKE_ID:
+                        if (isValid(i, randomIndex)) {
+                            maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.LAKE);
+                        }
+                        break;
+                    default:
+                        if (isValid(i, randomIndex) && randomIndex % 2 == 0) {
+                            maze.grid()[i][randomIndex] = new Cell(i, randomIndex, Cell.Type.COIN);
+                        }
+                        break;
                 }
             }
         }
@@ -45,5 +46,9 @@ public record EnvironmentGeneration(Maze maze) {
                 }
             }
         }
+    }
+
+    private boolean isValid(int row, int col) {
+        return col > 0 && col < maze.width() - 1 && maze.grid()[row][col].type() == Cell.Type.PASSAGE;
     }
 }
