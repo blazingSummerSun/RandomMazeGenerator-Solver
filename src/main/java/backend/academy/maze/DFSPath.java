@@ -48,7 +48,7 @@ public class DFSPath implements Solver {
 
         if (start.row() == end.row() && start.col() == end.col()) {
             if (length < shortestLength) {
-                shortestPath = new ArrayList<>(currentPath).reversed();
+                shortestPath = new ArrayList<>(currentPath);
                 shortestLength = length;
             }
         } else {

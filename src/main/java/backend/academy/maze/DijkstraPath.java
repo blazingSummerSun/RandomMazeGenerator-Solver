@@ -35,7 +35,7 @@ public class DijkstraPath implements Solver {
                     shortestPath.add(current);
                     current = current.parent;
                 }
-                return shortestPath;
+                return shortestPath.reversed();
             }
             for (int[] nextMove : DIRECTIONS) {
                 int newX = current.x + nextMove[xCoordinate];
