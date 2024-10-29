@@ -1,9 +1,9 @@
 package backend.academy.maze;
 
 public record Cell(int row, int col, Type type) {
-    private static final int SWAMP_COST = 5;
-    private static final int PASSAGE_COST = 1;
-    private static final int LAKE_COST = 4;
+    private static final int SWAMP_COST = 5000;
+    private static final int PASSAGE_COST = 50;
+    private static final int LAKE_COST = 1000;
     private static final int COIN_COST = 0;
 
     public enum Type {
