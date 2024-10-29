@@ -12,7 +12,7 @@ public class MazeSelector {
     private static final int KRUSKAL = 1;
     private static final int HUNT_AND_KILL = 2;
     private static final int DFS = 1;
-    private static final int BFS = 2;
+    private static final int DIJKSTRA = 2;
     private static final int A_STAR = 3;
     private static final String NOT_A_NUMBER_ERROR = "Your input is not a number! Try again!";
     private static final String IO_ERROR = "Something wrong with your input! Try again!";
@@ -147,7 +147,7 @@ public class MazeSelector {
         while (solverIndex < DFS || solverIndex > A_STAR) {
             output.print("""
                 1. DFS
-                2. BFS
+                2. Dijkstra's algorithm
                 3. A* algorithm
                 """);
             try {
@@ -163,7 +163,7 @@ public class MazeSelector {
     public List<Node> applySolver() {
         return switch (solverIndex) {
             case DFS -> new DFSPath(generatedMaze, startCoordinate, endCoordinate).solve();
-            case BFS -> new BFSPath(generatedMaze, startCoordinate, endCoordinate).solve();
+            case DIJKSTRA -> new DijkstraPath(generatedMaze, startCoordinate, endCoordinate).solve();
             default -> new AStarPath(generatedMaze, startCoordinate, endCoordinate).solve();
         };
     }
