@@ -228,6 +228,3 @@ while (!queueTraverse.isEmpty()) {
     queueTraverse.add(neighborNode);
 }
 ```
-## Contacts
-For any questions: \
-Email: beautifulfluffyclouds@gmail.com
